@@ -1,0 +1,14 @@
+services:
+  talentpilot:
+    build: .
+    volumes:
+      - ./settings.yaml:/app/settings.yaml:ro
+      - ./responses.yaml:/app/responses.yaml:ro
+      - state_data:/app/.state
+    environment:
+      - TALENTPILOT_EMAIL=${TALENTPILOT_EMAIL:-}
+      - TALENTPILOT_PASSWORD=${TALENTPILOT_PASSWORD:-}
+      - TALENTPILOT_HEADLESS=true
+
+volumes:
+  state_data:

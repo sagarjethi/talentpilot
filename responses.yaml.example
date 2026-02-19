@@ -1,0 +1,134 @@
+# TalentPilot — pre-filled form answers.
+# Copy this file to responses.yaml and fill in your details.
+# Keys are matched case-insensitively against form field labels.
+
+input_field:
+  First Name: "YourFirstName"
+  Last Name: "YourLastName"
+  Phone Country Code: "United States (+1)"
+  Phone Number: "1234567890"
+  Street address: "123 Main St"
+  City: "San Francisco"
+  State: "California"
+  Zip: "94105"
+  Email: "you@example.com"
+  Linkedin: "https://www.linkedin.com/in/your-profile"
+  Website: "https://www.example.com/"
+  "current location": "San Francisco"
+  "location": "San Francisco"
+  "where are you located": "San Francisco"
+  "city you reside": "San Francisco"
+
+  # Years of experience (whole numbers, case-insensitive match)
+  Engineering: 3
+  Project Management: 2
+  Product Management: 2
+  Business Development: 1
+  General Business: 2
+  Management: 1
+  Software Development: 3
+  Years of experience: 0
+
+  # Programming languages / frameworks
+  Python: 3
+  Javascript: 3
+  Java: 0
+  Typescript: 3
+  React: 3
+  React Native: 0
+  Node: 3
+  "Redux.js": 2
+  SASS: 0
+  selenium: 0
+  Linux: 2
+  "C++": 0
+  "C#": 0
+  PHP: 0
+  Laravel: 0
+  Django: 0
+  Angular: 0
+  Spring Boot: 0
+  ".NET": 0
+  MySQL: 0
+
+  # Proficiency
+  english: "Native or bilingual"
+
+  # Salary
+  Salary range: "Negotiable"
+  Desired salary: "Negotiable"
+  Salary expectations: "Negotiable"
+  Monthly compensation: "Negotiable"
+  Hourly pay rate: 0
+  Salary: 0
+
+  # Education / other
+  College or University: "Your University"
+  universityGpa: 3.5
+  Have you ever applied: "No"
+  References: "Name, Phone, email@example.com"
+  Hours are you available every week: 40
+  Notice period: "2 weeks"
+  Hear: "Linkedin"
+  github: 0
+  cloud: 0
+
+radio:
+  Driver: "yes"
+  Sponsor: "no"
+  "require sponsorship": "no"
+  "need sponsorship": "no"
+  Legally authorized: "yes"
+  "authorized to work": "yes"
+  "work authorization": "yes"
+  Urgent: "yes"
+  Commute: "yes"
+  High School Diploma: "yes"
+  "Bachelor's Degree": "yes"
+  "Associate's Degree": "no"
+  "Master's Degree": "no"
+  Master of Business Administration: "no"
+  Doctor of Philosophy: "no"
+  Doctor of Medicine: "no"
+  Doctor of Law: "no"
+  Background Check: "yes"
+  Remote: "yes"
+  Relocate: "yes"
+  US Citizen: "yes"
+  "Travel 25%": "yes"
+  Drug Test: "yes"
+  Hybrid: "yes"
+  Onsite: "yes"
+  North Korea: "no"
+  Data retention: "no"
+  Gender: "Decline to Answer"
+  Veteran: "I don't wish to answer"
+  Disability: "I don't wish to answer"
+  Race: "I prefer not to specify"
+  location: "Yes"
+  privacy policies: "confirm"
+  "18 years": "yes"
+  "non-compete": "no"
+  "confidentiality agreement": "yes"
+  "currently employed": "yes"
+  "willing to undergo": "yes"
+
+dropdown:
+  English: "Native"
+  French: "None"
+  German: "None"
+  "background in engineering": "Yes"
+  "educational background": "Yes"
+  "years of experience": "3"
+  "relevant work experience": "Yes"
+  "experience with": "Yes"
+  "proficiency": "Professional"
+  "level of education": "Bachelor's Degree"
+  "work experience": "Yes"
+  "how did you hear": "LinkedIn"
+  "willing to relocate": "Yes"
+  "available to start": "Immediately"
+  "notice period": "2 Weeks"
+  "Country": "United States"
+  "Country Code": "United States"
+  "country code": "United States"

@@ -1,0 +1,51 @@
+# TalentPilot configuration
+# Copy this file to settings.yaml and fill in your details.
+# Override any value via TALENTPILOT_<KEY> environment variables.
+
+email: "your-linkedin-email@example.com"
+password: "your-linkedin-password"
+
+headless: false
+chrome_profile_path: ""
+slow_mo: 50
+
+keywords:
+  - "frontend"
+  - "react"
+  - "typescript"
+
+locations:
+  - "NorthAmerica"
+
+experience_levels:
+  - "Entry level"
+
+date_posted: "Past Week"
+
+job_types:
+  - "Full-time"
+  - "Part-time"
+  - "Contract"
+
+remote_options:
+  - "On-site"
+  - "Remote"
+  - "Hybrid"
+
+salary_bracket: "$80,000+"
+sort_order: "recent"
+
+blocked_companies: []
+blocked_titles: []
+follow_companies: false
+
+applicant_experience_years: 3
+
+preferred_resume_index: 1
+resume_file_path: "/path/to/your/resume.pdf"
+phone_number: "1234567890"
+simulation_mode: false
+max_submissions_per_session: 5
+
+state_dir: ".state"
+responses_file: "responses.yaml"

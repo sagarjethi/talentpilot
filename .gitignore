@@ -1,0 +1,39 @@
+# Credentials & personal config (NEVER commit these)
+settings.yaml
+responses.yaml
+
+# Session state (cookies, auth tokens, history)
+.state/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.*
+
+# PDM build cache
+.pdm-build/
+
+# Pytest cache
+.pytest_cache/

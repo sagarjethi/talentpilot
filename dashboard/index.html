@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TalentPilot Dashboard</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --border: #2a2d3a;
+    --text: #e1e4ed;
+    --text-dim: #8b8fa3;
+    --accent: #6c63ff;
+    --green: #22c55e;
+    --red: #ef4444;
+    --blue: #3b82f6;
+    --yellow: #eab308;
+    --gray: #64748b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+  .container { max-width: 1400px; margin: 0 auto; padding: 24px; }
+
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 24px;
+  }
+  header h1 { font-size: 24px; font-weight: 700; }
+  header h1 span { color: var(--accent); }
+  .live-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    background: var(--green);
+    border-radius: 50%;
+    margin-right: 6px;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .stat-card .label { color: var(--text-dim); font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-card .value { font-size: 32px; font-weight: 700; margin-top: 4px; }
+  .stat-card .sub { color: var(--text-dim); font-size: 12px; margin-top: 4px; }
+
+  .toolbar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+  .toolbar input, .toolbar select {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    padding: 8px 12px;
+    font-size: 14px;
+    outline: none;
+  }
+  .toolbar input:focus, .toolbar select:focus { border-color: var(--accent); }
+  .toolbar input { flex: 1; min-width: 200px; }
+  .toolbar button {
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .toolbar button:hover { opacity: 0.9; }
+  .toolbar button.secondary { background: var(--surface); border: 1px solid var(--border); color: var(--text); }
+
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .tab {
+    padding: 10px 20px;
+    background: none;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    font-size: 14px;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+  .tab.active { color: var(--text); border-bottom-color: var(--accent); }
+  .tab:hover { color: var(--text); }
+
+  .table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: auto;
+    max-height: 70vh;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th {
+    text-align: left;
+    padding: 12px 16px;
+    background: var(--surface);
+    color: var(--text-dim);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  td { padding: 10px 16px; border-top: 1px solid var(--border); }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .badge-succeeded { background: rgba(34,197,94,0.15); color: var(--green); }
+  .badge-dry_run { background: rgba(59,130,246,0.15); color: var(--blue); }
+  .badge-failed { background: rgba(239,68,68,0.15); color: var(--red); }
+  .badge-skipped { background: rgba(100,116,139,0.15); color: var(--gray); }
+
+  .section-panel { display: none; }
+  .section-panel.active { display: block; }
+
+  .loading {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-dim);
+  }
+  .loading .spinner {
+    display: inline-block;
+    width: 32px; height: 32px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1><span>Talent</span>Pilot Dashboard</h1>
+    <div style="color:var(--text-dim);font-size:13px">
+      <span class="live-dot"></span>
+      <span id="statusText">Auto-refreshing every 10s</span>
+    </div>
+  </header>
+
+  <!-- Stats Cards -->
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card">
+      <div class="label">Total Applications</div>
+      <div class="value" id="statTotal">-</div>
+      <div class="sub" id="statTotalSub">Loading...</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Succeeded</div>
+      <div class="value" id="statSucceeded" style="color:var(--green)">-</div>
+      <div class="sub" id="statSucceededSub"></div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Dry Runs</div>
+      <div class="value" id="statDryRun" style="color:var(--blue)">-</div>
+      <div class="sub">simulation mode</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Failed</div>
+      <div class="value" id="statFailed" style="color:var(--red)">-</div>
+      <div class="sub" id="statFailedSub"></div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Avg Duration</div>
+      <div class="value" id="statDuration">-</div>
+      <div class="sub">per application</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">Top Company</div>
+      <div class="value" id="statCompany" style="font-size:18px">-</div>
+      <div class="sub" id="statCompanySub"></div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs">
+    <button class="tab active" data-tab="applications">Applications</button>
+    <button class="tab" data-tab="sessions">Sessions</button>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="toolbar" id="toolbar">
+    <input type="text" id="searchInput" placeholder="Search by title, company, location...">
+    <select id="outcomeFilter">
+      <option value="">All Outcomes</option>
+      <option value="succeeded">Succeeded</option>
+      <option value="dry_run">Dry Run</option>
+      <option value="failed">Failed</option>
+      <option value="skipped">Skipped</option>
+    </select>
+    <button class="secondary" onclick="window.open('/api/export/csv')">Export CSV</button>
+    <button class="secondary" onclick="refreshAll()">Refresh Now</button>
+  </div>
+
+  <!-- Applications Panel -->
+  <div class="section-panel active" id="panel-applications">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Company</th>
+            <th>Location</th>
+            <th>Outcome</th>
+            <th>Date</th>
+            <th>Duration</th>
+            <th>Failure Reason</th>
+          </tr>
+        </thead>
+        <tbody id="appTableBody">
+          <tr><td colspan="8" class="loading"><div class="spinner"></div><br>Loading data...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Sessions Panel -->
+  <div class="section-panel" id="panel-sessions">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Session ID</th>
+            <th>Started</th>
+            <th>Ended</th>
+            <th>Inspected</th>
+            <th>Submitted</th>
+            <th>Filtered</th>
+            <th>Failed</th>
+            <th>Skipped</th>
+            <th>Mode</th>
+          </tr>
+        </thead>
+        <tbody id="sessionTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+const API = window.location.origin;
+let allRows = [];
+let refreshTimer = null;
+
+// --- Auto-load on page open ---
+document.addEventListener('DOMContentLoaded', () => {
+  refreshAll();
+  // Auto-refresh every 10 seconds
+  refreshTimer = setInterval(refreshAll, 10000);
+});
+
+async function refreshAll() {
+  document.getElementById('statusText').textContent = 'Refreshing...';
+  try {
+    await Promise.all([loadStats(), loadApplications(), loadSessions()]);
+    document.getElementById('statusText').textContent =
+      'Last updated: ' + new Date().toLocaleTimeString() + ' (auto-refresh 10s)';
+  } catch(e) {
+    document.getElementById('statusText').textContent = 'Error loading data - retrying...';
+    console.error(e);
+  }
+}
+
+// --- Stats ---
+async function loadStats() {
+  const res = await fetch(API + '/api/stats');
+  const s = await res.json();
+
+  document.getElementById('statTotal').textContent = s.total;
+  document.getElementById('statTotalSub').textContent =
+    `${s.succeeded} ok, ${s.dry_run} dry, ${s.failed} fail, ${s.skipped} skip`;
+  document.getElementById('statSucceeded').textContent = s.succeeded;
+  const rate = s.total > 0 ? Math.round((s.succeeded / s.total) * 100) : 0;
+  document.getElementById('statSucceededSub').textContent = rate + '% success rate';
+  document.getElementById('statDryRun').textContent = s.dry_run;
+  document.getElementById('statFailed').textContent = s.failed;
+  document.getElementById('statFailedSub').textContent = s.skipped + ' skipped';
+  document.getElementById('statDuration').textContent =
+    s.avg_duration_ms > 0 ? (s.avg_duration_ms / 1000).toFixed(1) + 's' : '-';
+  document.getElementById('statCompany').textContent = s.top_company || '-';
+  document.getElementById('statCompanySub').textContent =
+    s.top_company_count ? s.top_company_count + ' applications' : '';
+}
+
+// --- Applications ---
+async function loadApplications() {
+  const res = await fetch(API + '/api/applications');
+  allRows = await res.json();
+  applyFilters();
+}
+
+function renderApplications(rows) {
+  const tbody = document.getElementById('appTableBody');
+  if (rows.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text-dim);padding:40px">No applications yet. The bot will log them here as it runs.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = rows.map((r, i) => `
+    <tr>
+      <td style="color:var(--text-dim)">${i + 1}</td>
+      <td>${r.url ? `<a href="${esc(r.url)}" target="_blank">${esc(r.title || '(untitled)')}</a>` : esc(r.title || '(untitled)')}</td>
+      <td>${esc(r.company || '')}</td>
+      <td style="color:var(--text-dim)">${esc(r.location_label || '')}</td>
+      <td><span class="badge badge-${badgeClass(r.outcome)}">${esc(r.outcome)}</span></td>
+      <td style="color:var(--text-dim);white-space:nowrap">${formatDate(r.attempted_at)}</td>
+      <td style="color:var(--text-dim)">${r.duration_ms ? (r.duration_ms / 1000).toFixed(1) + 's' : '-'}</td>
+      <td style="color:var(--red);font-size:12px;max-width:200px;overflow:hidden;text-overflow:ellipsis">${esc(r.failure_reason || '')}</td>
+    </tr>
+  `).join('');
+}
+
+// --- Sessions ---
+async function loadSessions() {
+  const res = await fetch(API + '/api/sessions');
+  const rows = await res.json();
+  const tbody = document.getElementById('sessionTableBody');
+  if (rows.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:var(--text-dim);padding:40px">No sessions yet</td></tr>';
+    return;
+  }
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td style="font-family:monospace;font-size:12px;color:var(--text-dim)">${esc((r.id || '').substring(0,8))}</td>
+      <td style="white-space:nowrap">${formatDate(r.started_at)}</td>
+      <td style="white-space:nowrap;color:var(--text-dim)">${formatDate(r.ended_at)}</td>
+      <td>${r.total_inspected ?? 0}</td>
+      <td style="color:var(--green)">${r.total_submitted ?? 0}</td>
+      <td style="color:var(--yellow)">${r.total_filtered ?? 0}</td>
+      <td style="color:var(--red)">${r.total_failed ?? 0}</td>
+      <td style="color:var(--gray)">${r.total_skipped ?? 0}</td>
+      <td><span class="badge ${r.simulation_mode ? 'badge-dry_run' : 'badge-succeeded'}">${r.simulation_mode ? 'Simulation' : 'Live'}</span></td>
+    </tr>
+  `).join('');
+}
+
+// --- Tabs ---
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+    document.getElementById('toolbar').style.display =
+      tab.dataset.tab === 'applications' ? '' : 'none';
+  });
+});
+
+// --- Search/Filter ---
+document.getElementById('searchInput').addEventListener('input', applyFilters);
+document.getElementById('outcomeFilter').addEventListener('change', applyFilters);
+
+function applyFilters() {
+  const search = document.getElementById('searchInput').value.toLowerCase();
+  const outcome = document.getElementById('outcomeFilter').value;
+  const filtered = allRows.filter(r => {
+    if (outcome && outcome === 'skipped') {
+      if (!(r.outcome || '').startsWith('skipped')) return false;
+    } else if (outcome && r.outcome !== outcome) return false;
+    if (search) {
+      const hay = ((r.title||'') + ' ' + (r.company||'') + ' ' + (r.location_label||'')).toLowerCase();
+      if (!hay.includes(search)) return false;
+    }
+    return true;
+  });
+  renderApplications(filtered);
+}
+
+// --- Helpers ---
+function esc(s) {
+  if (!s) return '';
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function badgeClass(outcome) {
+  if (outcome === 'succeeded') return 'succeeded';
+  if (outcome === 'dry_run') return 'dry_run';
+  if (outcome === 'failed') return 'failed';
+  return 'skipped';
+}
+
+function formatDate(iso) {
+  if (!iso) return '-';
+  try {
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return iso;
+    return d.toLocaleDateString() + ' ' + d.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  } catch(e) { return iso; }
+}
+</script>
+</body>
+</html>
